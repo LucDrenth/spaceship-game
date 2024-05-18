@@ -76,14 +76,10 @@ fn spaceship_movement_controls(
 
     transform.rotate_y(rotation_y);
 
-    // TODO set roll as rotation on the z axis.
-    // The code below will both rotate and roll the ship. But it has glitchy behaviour
-    // when the rotation angle gets more than 90 degrees on any angle
-    //
-    // let mut e = transform.rotation.to_euler(EulerRot::XYZ);
-    // e.1 += rotation_y;
-    // e.2 = roll;
-    // transform.rotation = Quat::from_euler(EulerRot::XYZ, e.0, e.1, e.2);
+    // TODO spaceship turns upside down when y-rotation is towards the lower halve.
+    // This happens because the euler angle is the same for upper halve and bottom halve.
+    let current_role = transform.rotation.to_euler(EulerRot::XYZ).2;
+    transform.rotate_local_z(roll - current_role);
 
     velocity.value = -transform.forward() * movement;
 }
