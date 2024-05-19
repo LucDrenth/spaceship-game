@@ -35,7 +35,7 @@ impl Plugin for AsteroidPlugin {
 }
 
 #[derive(Resource)]
-pub struct SpawnTimer {
+struct SpawnTimer {
     timer: Timer,
 }
 

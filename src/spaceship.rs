@@ -102,6 +102,7 @@ fn spaceship_weapon_controls(
 
     let spaceship_transform = query.single();
 
+    // TODO spawn missles independent of framerate
     if keyboard_input.pressed(KeyCode::Space) {
         let mut missle_transform = Transform::from_translation(
             spaceship_transform.translation + -spaceship_transform.forward() * 7.5,
