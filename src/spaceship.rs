@@ -81,10 +81,14 @@ fn spaceship_movement_controls(
 
     transform.rotate_y(rotation_y);
 
-    // TODO spaceship turns upside down when y-rotation is towards the lower halve.
-    // This happens because the euler angle is the same for upper halve and bottom halve.
     let current_role = transform.rotation.to_euler(EulerRot::XYZ).2;
     transform.rotate_local_z(roll - current_role);
+
+    // TODO For some reason the spaceship is on its back when looking down so we compensate
+    // by turning it back up. But there is still a glitch happening when looking exactly left or right.
+    if transform.forward().z >= 0.0 {
+        transform.rotate_local_z(PI);
+    }
 
     // TODO ensure we do not go off screen, by either moving the camera or constraining movement to the windows
     velocity.value = -transform.forward() * movement;
