@@ -29,7 +29,7 @@ impl Plugin for AsteroidPlugin {
         app.insert_resource(SpawnTimer {
             timer: Timer::from_seconds(SPAWN_INTERVAL_SECONDS, TimerMode::Repeating),
         })
-        .add_systems(Update, remove_on_missle_collision)
+        .add_systems(Update, remove_on_missile_collision)
         .add_systems(Update, spawn_asteroid);
     }
 }
@@ -88,34 +88,55 @@ fn spawn_asteroid(
     ));
 }
 
-fn remove_on_missle_collision(
+fn remove_on_missile_collision(
     mut commands: Commands,
     query: Query<(Entity, &Collider), With<Asteroid>>,
-    missles_query: Query<Entity, With<SpaceshipMissile>>,
+    missiles_query: Query<Entity, With<SpaceshipMissile>>,
     game_state: Res<GameState>,
 ) {
     if !game_state.is_playing {
         return;
     }
 
-    let mut missle_entities = vec![];
-    for missle_entity in missles_query.iter() {
-        missle_entities.push(missle_entity);
+    struct MissileEntry {
+        entity: Entity,
+        removed: bool,
+    }
+
+    let mut missiles: Vec<MissileEntry> = vec![];
+    for missile_entity in missiles_query.iter() {
+        missiles.push(MissileEntry {
+            entity: missile_entity,
+            removed: false,
+        });
     }
 
     for (asteroid_entity, asteroid_collider) in query.iter() {
         for collided_entity in &asteroid_collider.colliding_entities {
-            match missle_entities.iter().find(|e| *e == collided_entity) {
-                Some(colliding_missle_entity) => {
+            let mut colliding_missile_entry_index: Option<usize> = None;
+
+            for i in 0..missiles.len() {
+                if missiles[i].removed {
+                    continue;
+                }
+
+                if missiles[i].entity == *collided_entity {
+                    colliding_missile_entry_index = Some(i);
+                    break;
+                }
+            }
+
+            match colliding_missile_entry_index {
+                Some(missile_entry_index) => {
                     commands.entity(asteroid_entity).despawn_recursive();
 
-                    // TODO also remove entry from missle_entities, so that if a missle collides with
-                    // multiple asteroid, we won't get a warning about not being able to despawn the
-                    // missle entity due to it already being despawnd by a previous asteroid collision
-                    // check.
-                    commands
-                        .entity(*colliding_missle_entity)
-                        .despawn_recursive();
+                    if !missiles[missile_entry_index].removed {
+                        missiles[missile_entry_index].removed = true;
+                        commands
+                            .entity(missiles[missile_entry_index].entity)
+                            .despawn_recursive();
+                    }
+
                     break;
                 }
                 None => (),

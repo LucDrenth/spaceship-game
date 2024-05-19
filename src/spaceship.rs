@@ -14,8 +14,8 @@ const SPACESHIP_ROLL_AMOUNT_ON_STEER: f32 = TAU / 16.0;
 const SPACESHIP_MOVEMENT_SPEED: f32 = 20.0;
 const SPACESHIP_COLLISION_SIZE: f32 = 5.0;
 
-const MISSLE_SPEED: f32 = 50.0;
-const MISSLE_COLLISION_SIZE: f32 = 1.0;
+const MISSILE_SPEED: f32 = 50.0;
+const MISSILE_COLLISION_SIZE: f32 = 1.0;
 
 #[derive(Component)]
 pub struct Spaceship;
@@ -103,26 +103,26 @@ fn spaceship_weapon_controls(
 
     let spaceship_transform = query.single();
 
-    // TODO spawn missles independent of framerate
+    // TODO spawn missiles independent of framerate
     if keyboard_input.pressed(KeyCode::Space) {
-        let mut missle_transform = Transform::from_translation(
+        let mut missile_transform = Transform::from_translation(
             spaceship_transform.translation + -spaceship_transform.forward() * 7.5,
         );
-        missle_transform.rotation = spaceship_transform.rotation.clone();
-        missle_transform.rotate_local_x(PI / 2.0);
+        missile_transform.rotation = spaceship_transform.rotation.clone();
+        missile_transform.rotate_local_x(PI / 2.0);
 
         commands.spawn((
             MovingObjectBundle {
                 velocity: Velocity {
-                    value: -spaceship_transform.forward() * MISSLE_SPEED,
+                    value: -spaceship_transform.forward() * MISSILE_SPEED,
                 },
                 acceleration: Acceleration { value: Vec3::ZERO },
                 model: SceneBundle {
-                    scene: scene_assets.missles.clone(),
-                    transform: missle_transform,
+                    scene: scene_assets.missiles.clone(),
+                    transform: missile_transform,
                     ..default()
                 },
-                collider: Collider::new(MISSLE_COLLISION_SIZE),
+                collider: Collider::new(MISSILE_COLLISION_SIZE),
             },
             SpaceshipMissile,
         ));
