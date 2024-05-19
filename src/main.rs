@@ -3,20 +3,20 @@ use asteroid::AsteroidPlugin;
 use bevy::prelude::*;
 use camera::CameraPlugin;
 use collision_detection::CollisionDetectionPlugin;
+use despawner::DespwanerPlugin;
 use game_state::{GameState, GameStatePlugin};
 use movement::MovementPlugin;
 use spaceship::SpaceshipPlugin;
 
 mod asset_loader;
-mod game_state;
-
-mod utils;
-
 mod asteroid;
 mod camera;
 mod collision_detection;
+mod despawner;
+mod game_state;
 mod movement;
 mod spaceship;
+mod utils;
 
 fn main() {
     App::new()
@@ -36,6 +36,7 @@ fn main() {
         .add_plugins(GameStatePlugin)
         .add_plugins(MovementPlugin)
         .add_plugins(CollisionDetectionPlugin)
+        .add_plugins(DespwanerPlugin)
         .add_plugins(SpaceshipPlugin)
         .add_plugins(AsteroidPlugin)
         // run app

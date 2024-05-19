@@ -86,6 +86,7 @@ fn spaceship_movement_controls(
     let current_role = transform.rotation.to_euler(EulerRot::XYZ).2;
     transform.rotate_local_z(roll - current_role);
 
+    // TODO ensure we do not go off screen, by either moving the camera or constraining movement to the windows
     velocity.value = -transform.forward() * movement;
 }
 
