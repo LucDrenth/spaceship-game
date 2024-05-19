@@ -59,7 +59,10 @@ fn spaceship_movement_controls(
         return;
     }
 
-    let (mut transform, mut velocity) = query.single_mut();
+    let Ok((mut transform, mut velocity)) = query.get_single_mut() else {
+        error!("spaceship_movement_controls: Spaceship components not found");
+        return;
+    };
 
     let mut rotation_y = 0.0;
     let mut roll = 0.0;
@@ -105,7 +108,10 @@ fn spaceship_weapon_controls(
         return;
     }
 
-    let spaceship_transform = query.single();
+    let Ok(spaceship_transform) = query.get_single() else {
+        error!("spaceship_weapon_controls: Spaceship components not found");
+        return;
+    };
 
     // TODO spawn missiles independent of framerate
     if keyboard_input.pressed(KeyCode::Space) {
