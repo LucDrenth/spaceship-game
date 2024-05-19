@@ -24,3 +24,7 @@ fn pause_controls(keyboard_input: Res<ButtonInput<KeyCode>>, mut game_state: Res
         game_state.is_playing = !game_state.is_playing;
     }
 }
+
+fn run_if_gamestate_is_playing(game_state: Res<GameState>) -> bool {
+    game_state.is_playing
+}

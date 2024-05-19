@@ -2,6 +2,7 @@ use asset_loader::{AssetLoaderPlugin, SceneAssets};
 use asteroid::AsteroidPlugin;
 use bevy::prelude::*;
 use camera::CameraPlugin;
+use collision_detection::CollisionDetectionPlugin;
 use game_state::{GameState, GameStatePlugin};
 use movement::MovementPlugin;
 use spaceship::SpaceshipPlugin;
@@ -13,6 +14,7 @@ mod utils;
 
 mod asteroid;
 mod camera;
+mod collision_detection;
 mod movement;
 mod spaceship;
 
@@ -33,6 +35,7 @@ fn main() {
         .add_plugins(CameraPlugin)
         .add_plugins(GameStatePlugin)
         .add_plugins(MovementPlugin)
+        .add_plugins(CollisionDetectionPlugin)
         .add_plugins(SpaceshipPlugin)
         .add_plugins(AsteroidPlugin)
         // run app

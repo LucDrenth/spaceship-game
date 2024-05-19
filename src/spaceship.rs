@@ -4,6 +4,7 @@ use bevy::prelude::*;
 
 use crate::{
     asset_loader::SceneAssets,
+    collision_detection::Collider,
     game_state::GameState,
     movement::{Acceleration, MovingObjectBundle, Velocity},
 };
@@ -11,13 +12,16 @@ use crate::{
 const SPACESHIP_ROTATION_SPEED: f32 = 2.0;
 const SPACESHIP_ROLL_AMOUNT_ON_STEER: f32 = TAU / 16.0;
 const SPACESHIP_MOVEMENT_SPEED: f32 = 20.0;
+const SPACESHIP_COLLISION_SIZE: f32 = 5.0;
+
 const MISSLE_SPEED: f32 = 50.0;
+const MISSLE_COLLISION_SIZE: f32 = 1.0;
 
 #[derive(Component)]
 pub struct Spaceship;
 
 #[derive(Component)]
-pub struct SpaceshipMissle;
+pub struct SpaceshipMissile;
 
 pub struct SpaceshipPlugin;
 
@@ -39,6 +43,7 @@ fn spawn_spaceship(mut commands: Commands, scene_assets: Res<SceneAssets>) {
                 transform: Transform::from_translation(Vec3::ZERO),
                 ..default()
             },
+            collider: Collider::new(SPACESHIP_COLLISION_SIZE),
         },
         Spaceship,
     ));
@@ -115,8 +120,9 @@ fn spaceship_weapon_controls(
                     transform: missle_transform,
                     ..default()
                 },
+                collider: Collider::new(MISSLE_COLLISION_SIZE),
             },
-            SpaceshipMissle,
+            SpaceshipMissile,
         ));
     }
 }
