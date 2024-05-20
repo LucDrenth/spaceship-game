@@ -6,7 +6,6 @@ use rand::Rng;
 use crate::{
     asset_loader::SceneAssets,
     collision_detection::Collider,
-    game_state::GameState,
     movement::{Acceleration, MovingObjectBundle, Velocity},
     schedules::InGameSet,
     spaceship::SpaceshipMissile,
@@ -48,12 +47,7 @@ fn spawn_asteroid(
     mut spawn_timer: ResMut<SpawnTimer>,
     time: Res<Time>,
     scene_assets: Res<SceneAssets>,
-    game_state: Res<GameState>,
 ) {
-    if !game_state.is_playing {
-        return;
-    }
-
     spawn_timer.timer.tick(time.delta());
 
     if !spawn_timer.timer.just_finished() {
@@ -96,12 +90,7 @@ fn remove_on_missile_collision(
     mut commands: Commands,
     query: Query<(Entity, &Collider), With<Asteroid>>,
     missiles_query: Query<Entity, With<SpaceshipMissile>>,
-    game_state: Res<GameState>,
 ) {
-    if !game_state.is_playing {
-        return;
-    }
-
     struct MissileEntry {
         entity: Entity,
         removed: bool,

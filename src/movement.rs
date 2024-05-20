@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{collision_detection::Collider, game_state::GameState, schedules::InGameSet};
+use crate::{collision_detection::Collider, schedules::InGameSet};
 
 #[derive(Component, Debug)]
 pub struct Velocity {
@@ -33,29 +33,13 @@ impl Plugin for MovementPlugin {
     }
 }
 
-fn update_velocity(
-    mut query: Query<(&Acceleration, &mut Velocity)>,
-    time: Res<Time>,
-    game_state: Res<GameState>,
-) {
-    if !game_state.is_playing {
-        return;
-    }
-
+fn update_velocity(mut query: Query<(&Acceleration, &mut Velocity)>, time: Res<Time>) {
     for (acceleration, mut velocity) in query.iter_mut() {
         velocity.value += acceleration.value * time.delta_seconds();
     }
 }
 
-fn update_position(
-    mut query: Query<(&mut Transform, &Velocity)>,
-    time: Res<Time>,
-    game_state: Res<GameState>,
-) {
-    if !game_state.is_playing {
-        return;
-    }
-
+fn update_position(mut query: Query<(&mut Transform, &Velocity)>, time: Res<Time>) {
     for (mut transform, velocity) in query.iter_mut() {
         transform.translation += velocity.value * time.delta_seconds();
     }

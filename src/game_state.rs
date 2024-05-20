@@ -1,30 +1,29 @@
 use bevy::prelude::*;
 
-#[derive(Resource)]
-pub struct GameState {
-    pub is_playing: bool,
-}
-
-impl Default for GameState {
-    fn default() -> Self {
-        Self { is_playing: true }
-    }
+#[derive(Debug, Clone, Copy, Default, Eq, PartialEq, Hash, States)]
+pub enum GameState {
+    #[default]
+    InGame,
+    Paused,
 }
 
 pub struct GameStatePlugin;
-
 impl Plugin for GameStatePlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Update, pause_controls);
+        app.init_state::<GameState>()
+            .add_systems(Update, game_state_input_events);
     }
 }
 
-fn pause_controls(keyboard_input: Res<ButtonInput<KeyCode>>, mut game_state: ResMut<GameState>) {
+pub fn game_state_input_events(
+    mut next_state: ResMut<NextState<GameState>>,
+    state: Res<State<GameState>>,
+    keyboard_input: Res<ButtonInput<KeyCode>>,
+) {
     if keyboard_input.just_pressed(KeyCode::Escape) {
-        game_state.is_playing = !game_state.is_playing;
+        match state.get() {
+            GameState::InGame => next_state.set(GameState::Paused),
+            GameState::Paused => next_state.set(GameState::InGame),
+        }
     }
-}
-
-fn run_if_gamestate_is_playing(game_state: Res<GameState>) -> bool {
-    game_state.is_playing
 }

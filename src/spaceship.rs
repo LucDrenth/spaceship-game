@@ -5,7 +5,6 @@ use bevy::prelude::*;
 use crate::{
     asset_loader::SceneAssets,
     collision_detection::Collider,
-    game_state::GameState,
     movement::{Acceleration, MovingObjectBundle, Velocity},
     schedules::InGameSet,
 };
@@ -55,12 +54,7 @@ fn spaceship_movement_controls(
     mut query: Query<(&mut Transform, &mut Velocity), With<Spaceship>>,
     keyboard_input: Res<ButtonInput<KeyCode>>,
     time: Res<Time>,
-    game_state: Res<GameState>,
 ) {
-    if !game_state.is_playing {
-        return;
-    }
-
     let Ok((mut transform, mut velocity)) = query.get_single_mut() else {
         error!("spaceship_movement_controls: Spaceship components not found");
         return;
@@ -104,12 +98,7 @@ fn spaceship_weapon_controls(
     query: Query<&Transform, With<Spaceship>>,
     keyboard_input: Res<ButtonInput<KeyCode>>,
     scene_assets: Res<SceneAssets>,
-    game_state: Res<GameState>,
 ) {
-    if !game_state.is_playing {
-        return;
-    }
-
     let Ok(spaceship_transform) = query.get_single() else {
         error!("spaceship_weapon_controls: Spaceship components not found");
         return;
