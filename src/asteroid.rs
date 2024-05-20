@@ -8,6 +8,7 @@ use crate::{
     collision_detection::Collider,
     game_state::GameState,
     movement::{Acceleration, MovingObjectBundle, Velocity},
+    schedules::InGameSet,
     spaceship::SpaceshipMissile,
     utils::random,
 };
@@ -29,8 +30,11 @@ impl Plugin for AsteroidPlugin {
         app.insert_resource(SpawnTimer {
             timer: Timer::from_seconds(SPAWN_INTERVAL_SECONDS, TimerMode::Repeating),
         })
-        .add_systems(Update, remove_on_missile_collision)
-        .add_systems(Update, spawn_asteroid);
+        .add_systems(
+            Update,
+            remove_on_missile_collision.in_set(InGameSet::CollisionDetection),
+        )
+        .add_systems(Update, spawn_asteroid.in_set(InGameSet::EntitySpwaning));
     }
 }
 

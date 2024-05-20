@@ -6,6 +6,7 @@ use collision_detection::CollisionDetectionPlugin;
 use despawner::DespwanerPlugin;
 use game_state::{GameState, GameStatePlugin};
 use movement::MovementPlugin;
+use schedules::SchedulesPlugin;
 use spaceship::SpaceshipPlugin;
 
 mod asset_loader;
@@ -15,6 +16,7 @@ mod collision_detection;
 mod despawner;
 mod game_state;
 mod movement;
+mod schedules;
 mod spaceship;
 mod utils;
 
@@ -31,6 +33,7 @@ fn main() {
         // default plugins
         .add_plugins(DefaultPlugins)
         // custom plugins
+        .add_plugins(SchedulesPlugin)
         .add_plugins(AssetLoaderPlugin)
         .add_plugins(CameraPlugin)
         .add_plugins(GameStatePlugin)

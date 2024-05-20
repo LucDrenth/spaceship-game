@@ -1,11 +1,16 @@
 use bevy::prelude::*;
 
+use crate::schedules::InGameSet;
+
 const DESPAWN_DISTANCE: f32 = 100.0;
 
 pub struct DespwanerPlugin;
 impl Plugin for DespwanerPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(PostUpdate, off_screen_despwaner);
+        app.add_systems(
+            PostUpdate,
+            off_screen_despwaner.in_set(InGameSet::DespwanEntities),
+        );
     }
 }
 

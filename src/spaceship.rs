@@ -7,6 +7,7 @@ use crate::{
     collision_detection::Collider,
     game_state::GameState,
     movement::{Acceleration, MovingObjectBundle, Velocity},
+    schedules::InGameSet,
 };
 
 const SPACESHIP_ROTATION_SPEED: f32 = 2.0;
@@ -27,9 +28,10 @@ pub struct SpaceshipPlugin;
 
 impl Plugin for SpaceshipPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, spawn_spaceship)
-            .add_systems(Update, spaceship_movement_controls)
-            .add_systems(Update, spaceship_weapon_controls);
+        app.add_systems(Startup, spawn_spaceship).add_systems(
+            Update,
+            (spaceship_movement_controls, spaceship_weapon_controls).in_set(InGameSet::UserInput),
+        );
     }
 }
 

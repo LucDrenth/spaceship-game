@@ -1,10 +1,15 @@
 use bevy::{prelude::*, utils::HashMap};
 
+use crate::schedules::InGameSet;
+
 pub struct CollisionDetectionPlugin;
 
 impl Plugin for CollisionDetectionPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Update, collision_detection);
+        app.add_systems(
+            Update,
+            collision_detection.in_set(InGameSet::CollisionDetection),
+        );
     }
 }
 
