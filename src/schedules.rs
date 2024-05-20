@@ -24,7 +24,7 @@ impl Plugin for SchedulesPlugin {
                 InGameSet::EntityUpdates,
                 InGameSet::CollisionDetection,
             )
-                // TODO add `.chain()`. It will result in a bug regarding collisions though.
+                .chain()
                 .run_if(in_state(GameState::InGame)),
         );
     }

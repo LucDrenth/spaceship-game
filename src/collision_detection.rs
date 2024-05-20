@@ -28,7 +28,7 @@ impl Collider {
     }
 }
 
-fn collision_detection(mut query: Query<(Entity, &GlobalTransform, &mut Collider)>) {
+fn collision_detection(mut query: Query<(Entity, &Transform, &mut Collider)>) {
     let mut collisions = HashMap::<Entity, Vec<Entity>>::new();
 
     for (entity, transform, collider) in query.iter() {
@@ -38,9 +38,7 @@ fn collision_detection(mut query: Query<(Entity, &GlobalTransform, &mut Collider
                 continue;
             }
 
-            let distance = transform
-                .translation()
-                .distance(target_transform.translation());
+            let distance = transform.translation.distance(target_transform.translation);
 
             if distance <= collider.radius + target_collider.radius {
                 collisions
